@@ -46,14 +46,7 @@ function App() {
           <button className="clear-btn">clear items</button>
         </div>
       )}
-      <div className="playlist-container">
-        <iframe
-          src="https://player.twitch.tv/?video=982876576"
-          height="500"
-          width="300"
-          allowfullscreen="true"
-        ></iframe>
-      </div>
+      <div className="playlist-container"></div>
     </section>
   );
 }
