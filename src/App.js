@@ -46,7 +46,14 @@ function App() {
           <button className="clear-btn">clear items</button>
         </div>
       )}
-      <div className="playlist-container"></div>
+      <div className="playlist-container">
+        <iframe
+          src="https://player.twitch.tv/?video=982876576&parent=tender-turing-c336ff.netlify.app/&autoplay=false"
+          height="300"
+          width="500"
+          allowfullscreen="true"
+        ></iframe>
+      </div>
     </section>
   );
 }
