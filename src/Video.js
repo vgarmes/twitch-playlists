@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function Video() {
+function Video({ videoID }) {
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://player.twitch.tv/js/embed/v1.js";
@@ -17,7 +17,7 @@ function Video() {
   const options = {
     width: 500,
     height: 300,
-    video: "982876576",
+    video: videoID,
   };
 
   const scriptLoaded = () => {

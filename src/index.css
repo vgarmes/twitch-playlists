@@ -158,6 +158,7 @@ main {
   display: grid;
   place-items: center;
 }
+
 /*
 =============== 
 Grocery List
@@ -254,6 +255,7 @@ Grocery List
 .playlist-item:hover {
   color: var(--clr-grey-5);
   background: var(--clr-grey-10);
+  cursor: pointer;
 }
 .playlist-item:hover .title {
   color: var(--clr-grey-5);

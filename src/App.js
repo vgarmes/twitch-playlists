@@ -2,58 +2,140 @@ import React, { useState, useEffect } from "react";
 import List from "./List";
 import Alert from "./Alert";
 import Video from "./Video";
-
-const test_url = "https://api.twitch.tv/helix/videos?id=982876576";
+const smallVideo = { width: 99, height: 54 };
+const largeVideo = { width: 495, height: 270 };
 
 function App() {
-  const [url, setUrl] = useState("");
+  const [videoURL, setVideoURL] = useState("");
+  const [video, setVideo] = useState({ id: "", title: "" });
   const [playlist, setPlaylist] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editID, setEditID] = useState(null);
   const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
-  const [loading, setLoading] = useState(false);
-  const [playing, isPlaying] = useState(true);
+  const [playingVideo, setPlayingVideo] = useState("");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!url) {
-      // display alert
+    if (isEditing) {
+      showAlert(true, "success", "video edited");
+      setPlaylist(
+        playlist.map((item) => {
+          if (item.id === editID) {
+            return { ...item, title: video.title };
+          }
+          return item;
+        })
+      );
+      setEditID(null);
+      setIsEditing(false);
     } else {
-      const newItem = { id: new Date().getTime().toString(), title: url };
+      showAlert(true, "success", "video added to the playlist");
+      const newItem = { id: video.id, title: video.title };
       setPlaylist([...playlist, newItem]);
-      setUrl("");
     }
+    setVideo({ id: "", title: "" });
+    setVideoURL("");
+    setShowForm(true);
+  };
+
+  const handleButtonClick = (e) => {
+    const regex = /(?<=twitch.tv\/videos\/)\d+/;
+    const newID = regex.test(videoURL) ? videoURL.match(regex)[0] : "";
+
+    if (!newID) {
+      showAlert(true, "danger", "invalid URL");
+    } else if (playlist.find((item) => item.id === newID)) {
+      showAlert(true, "danger", "video already in playlist");
+    } else {
+      setVideo({ ...video, id: newID });
+      setShowForm(false);
+    }
+  };
+
+  const showAlert = (show = false, type = "", msg = "") => {
+    setAlert({ show, type, msg });
+  };
+
+  const playVideo = (videoID) => {
+    setPlayingVideo(videoID);
+    setIsPlaying(true);
+  };
+
+  const clearList = () => {
+    showAlert(true, "danger", "empty list");
+    setPlaylist([]);
+  };
+
+  const removeVideo = (id) => {
+    showAlert(true, "danger", "video removed");
+    setPlaylist(playlist.filter((item) => item.id !== id));
+  };
+
+  const editVideo = (id) => {
+    const editingVideo = playlist.find((item) => item.id === id);
+    setIsEditing(true);
+    setShowForm(false);
+    setEditID(id);
+    setVideo({ ...editingVideo });
   };
 
   return (
     <section className="section-center">
+      <h3>Twitcher</h3>
+      {isPlaying && <Video videoID={playingVideo} />}
       <form className="playlist-form" onSubmit={handleSubmit}>
-        {alert.show && <Alert />}
-        <h3>Twitcher</h3>
-        <div className="form-control">
-          <input
-            type="text"
-            className="playlist"
-            placeholder="twitch.tv/video/1214"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          <button type="submit" className="submit-btn">
-            submit
-          </button>
-        </div>
+        {alert.show && (
+          <Alert {...alert} removeAlert={showAlert} playlist={playlist} />
+        )}
+
+        {showForm && (
+          <div className="form-control">
+            <input
+              type="text"
+              className="playlist"
+              placeholder="twitch.tv/video/1214"
+              value={videoURL}
+              onChange={(e) => setVideoURL(e.target.value)}
+            />
+            <button
+              type="button"
+              className="submit-btn"
+              onClick={handleButtonClick}
+            >
+              next
+            </button>
+          </div>
+        )}
+        {!showForm && (
+          <div className="form-control">
+            <input
+              type="text"
+              className="playlist"
+              placeholder="e.x. my video"
+              value={video.title}
+              onChange={(e) => setVideo({ ...video, title: e.target.value })}
+            />
+            <button type="submit" className="submit-btn">
+              {isEditing ? "edit" : "submit"}
+            </button>
+          </div>
+        )}
       </form>
       {playlist.length > 0 && (
         <div className="playlist-container">
-          <List items={playlist} />
-          <button className="clear-btn">clear items</button>
+          <List
+            items={playlist}
+            playVideo={playVideo}
+            removeVideo={removeVideo}
+            editVideo={editVideo}
+          />
+          <button className="clear-btn" onClick={clearList}>
+            clear items
+          </button>
         </div>
       )}
-      <div className="playlist-container">
-        <iframe
-          src="https://player.twitch.tv/?video=982876576&parent=tender-turing-c336ff.netlify.app/&autoplay=false"
-          height="300"
-          width="500"
-          allowfullscreen="true"
-        ></iframe>
-      </div>
     </section>
   );
 }
