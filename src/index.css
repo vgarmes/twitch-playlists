@@ -205,6 +205,7 @@ Playlist
   left: 20px;
   right: 20px;
   padding: 0.5rem;
+  z-index: 100;
   display: grid;
   align-items: center;
   text-align: center;
@@ -226,9 +227,26 @@ Playlist
   margin-bottom: 1.5rem;
   text-align: center;
 }
+.playlist-form {
+  position: relative;
+}
 .form-control {
   display: flex;
   justify-content: center;
+  /* in order to make transition between the 2 form inputs: */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s;
+}
+
+.show-form {
+  opacity: 1;
+  visibility: visible;
 }
 #video-container {
   display: flex;
