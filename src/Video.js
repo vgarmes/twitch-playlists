@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-function Video({ videoID }) {
+function Video({ id, timestamp }) {
+  const windowWidth = window.innerWidth;
+  const maxWidth = 560;
+  const options = {
+    width: windowWidth <= maxWidth ? Math.floor(0.95 * windowWidth) : 560,
+    height:
+      windowWidth <= maxWidth ? Math.floor((0.95 * windowWidth * 9) / 16) : 315,
+    video: id,
+  };
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://player.twitch.tv/js/embed/v1.js";
@@ -14,17 +23,14 @@ function Video({ videoID }) {
     };
   }, []);
 
-  const options = {
-    width: 500,
-    height: 300,
-    video: videoID,
-  };
-
   const scriptLoaded = () => {
-    const player = new window.Twitch.Player("video-player", options);
+    const player = new window.Twitch.Player("video-container", options);
+    player.addEventListener(window.Twitch.Player.PAUSE, function () {
+      console.log("paused");
+    });
   };
 
-  return <div id="video-player"></div>;
+  return <div id="video-container"></div>;
 }
 
 export default Video;

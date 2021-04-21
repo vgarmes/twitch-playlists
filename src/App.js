@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import List from "./List";
 import Alert from "./Alert";
 import Video from "./Video";
-const smallVideo = { width: 99, height: 54 };
-const largeVideo = { width: 495, height: 270 };
 
 function App() {
   const [videoURL, setVideoURL] = useState("");
-  const [video, setVideo] = useState({ id: "", title: "" });
+  const [video, setVideo] = useState({ id: "", title: "", timestamp: 0 });
   const [playlist, setPlaylist] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editID, setEditID] = useState(null);
@@ -32,10 +30,9 @@ function App() {
       setIsEditing(false);
     } else {
       showAlert(true, "success", "video added to the playlist");
-      const newItem = { id: video.id, title: video.title };
-      setPlaylist([...playlist, newItem]);
+      setPlaylist([...playlist, video]);
     }
-    setVideo({ id: "", title: "" });
+    setVideo({ id: "", title: "", timestamp: 0 });
     setVideoURL("");
     setShowForm(true);
   };
@@ -58,8 +55,8 @@ function App() {
     setAlert({ show, type, msg });
   };
 
-  const playVideo = (videoID) => {
-    setPlayingVideo(videoID);
+  const playVideo = (videoObj) => {
+    setPlayingVideo(videoObj);
     setIsPlaying(true);
   };
 
@@ -82,61 +79,67 @@ function App() {
   };
 
   return (
-    <section className="section-center">
-      <h3>Twitcher</h3>
-      {isPlaying && <Video videoID={playingVideo} />}
-      <form className="playlist-form" onSubmit={handleSubmit}>
-        {alert.show && (
-          <Alert {...alert} removeAlert={showAlert} playlist={playlist} />
-        )}
-
-        {showForm && (
-          <div className="form-control">
-            <input
-              type="text"
-              className="playlist"
-              placeholder="twitch.tv/video/1214"
-              value={videoURL}
-              onChange={(e) => setVideoURL(e.target.value)}
-            />
-            <button
-              type="button"
-              className="submit-btn"
-              onClick={handleButtonClick}
-            >
-              next
-            </button>
-          </div>
-        )}
-        {!showForm && (
-          <div className="form-control">
-            <input
-              type="text"
-              className="playlist"
-              placeholder="e.x. my video"
-              value={video.title}
-              onChange={(e) => setVideo({ ...video, title: e.target.value })}
-            />
-            <button type="submit" className="submit-btn">
-              {isEditing ? "edit" : "submit"}
-            </button>
-          </div>
-        )}
-      </form>
-      {playlist.length > 0 && (
-        <div className="playlist-container">
-          <List
-            items={playlist}
-            playVideo={playVideo}
-            removeVideo={removeVideo}
-            editVideo={editVideo}
-          />
-          <button className="clear-btn" onClick={clearList}>
-            clear items
-          </button>
-        </div>
+    <>
+      <nav className="nav__container">
+        <h3 className="nav__logo">Twitcher</h3>
+        <p className="nav__item">
+          <a href="https://github.com/vgarmes/twitcher">About</a>
+        </p>
+      </nav>
+      {alert.show && (
+        <Alert {...alert} removeAlert={showAlert} playlist={playlist} />
       )}
-    </section>
+      {isPlaying && <Video {...playingVideo} />}
+      <section className="section-center">
+        <form className="playlist-form" onSubmit={handleSubmit}>
+          {showForm && (
+            <div className="form-control">
+              <input
+                type="text"
+                className="playlist"
+                placeholder="twitch.tv/video/1214"
+                value={videoURL}
+                onChange={(e) => setVideoURL(e.target.value)}
+              />
+              <button
+                type="button"
+                className="submit-btn"
+                onClick={handleButtonClick}
+              >
+                next
+              </button>
+            </div>
+          )}
+          {!showForm && (
+            <div className="form-control">
+              <input
+                type="text"
+                className="playlist"
+                placeholder="e.x. my video"
+                value={video.title}
+                onChange={(e) => setVideo({ ...video, title: e.target.value })}
+              />
+              <button type="submit" className="submit-btn">
+                {isEditing ? "edit" : "submit"}
+              </button>
+            </div>
+          )}
+        </form>
+        {playlist.length > 0 && (
+          <div className="playlist-container">
+            <List
+              items={playlist}
+              playVideo={playVideo}
+              removeVideo={removeVideo}
+              editVideo={editVideo}
+            />
+            <button className="clear-btn" onClick={clearList}>
+              clear items
+            </button>
+          </div>
+        )}
+      </section>
+    </>
   );
 }
 
