@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import List from "./List";
 import Alert from "./Alert";
 import Video from "./Video";
 
+const getLocalStorage = () => {
+  let playlist = localStorage.getItem("playlist");
+  if (playlist) {
+    return JSON.parse(localStorage.getItem("playlist"));
+  } else {
+    return [];
+  }
+};
+
 function App() {
   const [videoURL, setVideoURL] = useState("");
-  const [video, setVideo] = useState({ id: "", title: "", timestamp: 0 });
-  const [playlist, setPlaylist] = useState([]);
+  const [video, setVideo] = useState({ id: "", title: "" });
+  const [playlist, setPlaylist] = useState(getLocalStorage());
   const [isEditing, setIsEditing] = useState(false);
   const [editID, setEditID] = useState(null);
   const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
@@ -32,7 +41,7 @@ function App() {
       showAlert(true, "success", "video added to the playlist");
       setPlaylist([...playlist, video]);
     }
-    setVideo({ id: "", title: "", timestamp: 0 });
+    setVideo({ id: "", title: "" });
     setVideoURL("");
     setShowForm(true);
   };
@@ -77,6 +86,10 @@ function App() {
     setEditID(id);
     setVideo({ ...editingVideo });
   };
+
+  useEffect(() => {
+    localStorage.setItem("playlist", JSON.stringify(playlist));
+  }, [playlist]);
 
   return (
     <>
