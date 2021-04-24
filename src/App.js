@@ -72,11 +72,17 @@ function App() {
   const clearList = () => {
     showAlert(true, "danger", "empty list");
     setPlaylist([]);
+    setIsPlaying(false);
+    setPlayingVideo("");
   };
 
   const removeVideo = (id) => {
     showAlert(true, "danger", "video removed");
     setPlaylist(playlist.filter((item) => item.id !== id));
+    if (playingVideo && playingVideo.id === id) {
+      setPlayingVideo("");
+      setIsPlaying(false);
+    }
   };
 
   const editVideo = (id) => {
