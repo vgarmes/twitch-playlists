@@ -104,6 +104,7 @@ function App() {
       )}
       {isPlaying && <Video {...playingVideo} />}
       <section className="section-center">
+        <p>{showForm ? "Paste URL:" : "Write a title:"}</p>
         <form className="playlist-form" onSubmit={handleSubmit}>
           <div
             className={`${
@@ -113,7 +114,7 @@ function App() {
             <input
               type="text"
               className="playlist"
-              placeholder="twitch.tv/video/1214"
+              placeholder="e.g.: twitch.tv/video/1234"
               value={videoURL}
               onChange={(e) => setVideoURL(e.target.value)}
             />
@@ -134,7 +135,7 @@ function App() {
             <input
               type="text"
               className="playlist"
-              placeholder="e.x. my video"
+              placeholder="e.g.: my video"
               value={video.title}
               onChange={(e) => setVideo({ ...video, title: e.target.value })}
             />

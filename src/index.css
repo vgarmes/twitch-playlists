@@ -194,7 +194,7 @@ Playlist
   border-radius: var(--radius);
   box-shadow: var(--light-shadow);
   transition: var(--transition);
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
 }
 .section-center:hover {
   box-shadow: var(--dark-shadow);
@@ -238,7 +238,7 @@ Playlist
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
+  width: 100%;
   opacity: 0;
   visibility: hidden;
   transition: opacity 1s;
