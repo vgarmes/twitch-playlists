@@ -47,8 +47,8 @@ function App() {
   };
 
   const handleButtonClick = (e) => {
-    const regex = /(?<=twitch.tv\/videos\/)\d+/;
-    const newID = regex.test(videoURL) ? videoURL.match(regex)[0] : "";
+    const regex = /twitch.tv\/videos\/(\d+)$/;
+    const newID = regex.test(videoURL) ? videoURL.match(regex)[1] : "";
 
     if (!newID) {
       showAlert(true, "danger", "invalid URL");
