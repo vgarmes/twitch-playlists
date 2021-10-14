@@ -15,7 +15,7 @@ const useScript = (url: string, callback: Function) => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [url]);
+  }, [url, callback]);
 };
 
 export default useScript;
