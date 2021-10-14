@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from 'react';
+import useScript from './hooks/useScript';
 
-function Video({ id, timestamp }) {
+function Video({ id }) {
   const windowWidth = window.innerWidth;
   const maxWidth = 560;
   const options = {
@@ -10,25 +11,14 @@ function Video({ id, timestamp }) {
     video: id,
   };
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://player.twitch.tv/js/embed/v1.js";
-    script.async = true;
-    script.onload = () => {
-      scriptLoaded();
-    };
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const scriptLoaded = () => {
-    const player = new window.Twitch.Player("video-container", options);
+    const player = new window.Twitch.Player('video-container', options);
     player.addEventListener(window.Twitch.Player.PAUSE, function () {
-      console.log("paused");
+      console.log('paused');
     });
   };
+
+  useScript('https://player.twitch.tv/js/embed/v1.js', scriptLoaded);
 
   return <div id="video-container"></div>;
 }
